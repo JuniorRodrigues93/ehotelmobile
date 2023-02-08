@@ -13,15 +13,15 @@ export default function Welcome() {
             <View style={styles.containerLogo}>
                 <Animatable.Image
                     animation="flipInY"
-                    source={require('../../assets/logo2.png')}
-                    style={{ width: '100%' }}
+                    source={require('../../assets/Logo.png')}
+                    style={{ width: '40%' }}
                     resizeMode="contain"
                 />
             </View>
 
             <Animatable.View delay={600} animation="fadeInUp" style={styles.containerForm}>
-                <Text style={styles.Title}>Gestão Hoteleira Simplificada!</Text>
-                <Text style={styles.text}>Faça o Login para iniciar.</Text>
+                <Text style={styles.Title}>eHotel Mobile</Text>
+                <Text style={styles.text}>Gestão Hoteleira Simplificada!</Text>
 
                 <TouchableOpacity onPress={() => navigation.navigate('Signin')} style={styles.button}>
                     <Text style={styles.textButton}>Acessar</Text>

@@ -11,6 +11,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: '#38A69D',
+        height: 200,
+        width: '100%',
     },
 
     containerForm: {
