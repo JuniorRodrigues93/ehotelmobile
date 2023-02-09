@@ -58,19 +58,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
-    buttonRegister: {
-        marginTop: 14,
-        alignSelf: "center",
-    },
-
-    registerText: {
-        color: "#a1a1a1",
-
-
-    },
-
-
-
 })
 
 export default styles
