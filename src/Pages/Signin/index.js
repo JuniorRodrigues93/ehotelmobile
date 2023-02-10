@@ -3,6 +3,9 @@ import { Text, TextInput, TouchableOpacity, Pressable, Keyboard, Alert } from 'r
 import styles from './style';
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+
+
 
 export default function Signin() {
     const navigation = useNavigation();
@@ -10,12 +13,15 @@ export default function Signin() {
     const [password, setPassword] = useState('');
 
     const handerLogin = () => {
-        if (username === 'Suporte' && password === 'Suporte23') {
-            navigation.navigate('Room')
-        } else {
-            Alert.alert('Login Inválido!');
-            //Alert.alert(`${username.toString()}`);
-        };
+        axios.get(`http://192.168.50.53:44365/usuario/getuser?email=${username}&senha=${password}`)
+            .then((res) => {
+                console.log(res.data[0]);
+                if (res.data[0] != undefined) {
+                    navigation.navigate('Room', { userLogado: res.data[0] })
+                } else {
+                    Alert.alert('Login Inválido!');
+                }
+            });
     }
 
     return (

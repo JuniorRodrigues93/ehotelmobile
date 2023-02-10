@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, SafeAreaView } from 'react-native';
 import * as Animatable from 'react-native-animatable';
+import Icon from 'react-native-vector-icons/FontAwesome5'
 import styles from './style';
 import axios from 'axios';
 
 
 
-export default function Room() {
-    const baseURL = 'https://api.github.com';
+
+export default function Room({ route }) {
+    const userlogado = route.params.userLogado;
     const perPage = 20;
 
 
@@ -16,50 +18,48 @@ export default function Room() {
     const [page, setPage] = useState(1);
 
     useEffect(() => {
-        loadApi();
+        axios.get(`http://192.168.50.53:44365/apartamento/getapartamentos?empresa=${userlogado.UIDEmpresa}`)
+            .then((res) => {
+                console.log(res.data);
+                setData(res.data);
+            })
+        // loadApi();
+        if (loading) return;
+        setLoading(true);
+        // setData([(response).data]);
+        // setPage(page + 1);
+        setLoading(false);
     }, []);
 
-    async function loadApi() {
-        if (loading) return;
-
-        setLoading(true);
-        const response = axios.get(`${baseURL}/search/repositories?q=react&per_page=${perPage}&page=${page}`);
-
-        setData([...data, ...(await response).data.items]);
-
-        setPage(page + 1);
-        setLoading(false);
-    }
-
-
     return (
-        <View style={styles.container}>
-            <Animatable.Text animation="fadeInLeft" delay={500} style={styles.apartamento}>Apartamentos Ocupados</Animatable.Text>
+        <SafeAreaView style={styles.container}>
+            <Animatable.Text animation="fadeInLeft" delay={500} style={styles.apartamento}>Apartamentos Ocupados
+                {/* <View style={styles.viewIcon}>
+                    <Icon name='bars' size={30} color='#38A69D' marginHorizontal='15' />
+                </View> */}
+            </Animatable.Text>
 
             <FlatList
                 style={styles.flatList}
                 contentContainerStyle={{ marginHorizontal: 20 }}
                 data={data}
-                keyExtractor={item => String(item.id)}
-                renderItem={({ item }) => <ListItem data={item} />} //Vinculado a function ListItem
-                onEndReached={loadApi} //Chama a function loadApi, para recarregar novos dados sempre que chegar ao final da página.
-                onEndReachedThreshold={0.1} //Determina em que momento vai ser recarregada a loadApi, nesse caso 0.1 = 10% para terminar a página.
+                renderItem={({ item }) => <ListItem data={item} />}
                 ListFooterComponent={<FooterList load={loading} />} //Renderizado apenas no final da lista, vai atuar quando estiver em Loading.
 
             />
 
-        </View>
+        </SafeAreaView>
     )
 }
 
 //A função abaixo (ListItem) serve pra listar os dados que serão renderizados na tela pelo renderItem do Flatlist.
 function ListItem({ data }) {
+    console.log(data)
     return (
         <TouchableOpacity onPress={alertMessage} style={styles.listItem} >
-            <Text style={styles.listText}>{data.full_name}</Text>
+            <Text style={styles.listText}>{data.Apartamento} - {data.Categoria}</Text>
         </TouchableOpacity>
     )
-
 }
 
 //A função abaixo (alertMessage) serve para criar o alerta que será exibido ao clicar no apartamento. 

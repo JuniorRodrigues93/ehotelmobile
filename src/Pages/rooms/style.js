@@ -15,12 +15,19 @@ const styles = StyleSheet.create({
         borderBottomColor: '#38A69D',
     },
 
+    viewIcon: {
+        margin: 20,
+        height: 40,
+        width: 40,
+        backgroundColor: 'red',
+    },
+
     flatList: {
         marginTop: 15,
     },
 
     listItem: {
-        backgroundColor: '#38A69D',
+        backgroundColor: '#dc3545',
         padding: 25,
         marginTop: 20,
         borderRadius: 10,
