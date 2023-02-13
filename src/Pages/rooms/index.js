@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, SafeAreaView, } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import styles from './style';
@@ -10,12 +10,11 @@ import axios from 'axios';
 
 export default function Room({ route }) {
     const userlogado = route.params.userLogado;
-    const perPage = 20;
-
 
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [page, setPage] = useState(1);
+
+
 
     useEffect(() => {
         axios.get(`http://192.168.50.53:44365/apartamento/getapartamentos?empresa=${userlogado.UIDEmpresa}`)
@@ -23,20 +22,15 @@ export default function Room({ route }) {
                 console.log(res.data);
                 setData(res.data);
             })
-        // loadApi();
+
         if (loading) return;
         setLoading(true);
-        // setData([(response).data]);
-        // setPage(page + 1);
         setLoading(false);
     }, []);
 
     return (
         <SafeAreaView style={styles.container}>
             <Animatable.Text animation="fadeInLeft" delay={500} style={styles.apartamento}>Apartamentos Ocupados
-                {/* <View style={styles.viewIcon}>
-                    <Icon name='bars' size={30} color='#38A69D' marginHorizontal='15' />
-                </View> */}
             </Animatable.Text>
 
             <FlatList
@@ -45,12 +39,11 @@ export default function Room({ route }) {
                 data={data}
                 renderItem={({ item }) => <ListItem data={item} />}
                 ListFooterComponent={<FooterList load={loading} />} //Renderizado apenas no final da lista, vai atuar quando estiver em Loading.
-
             />
-
         </SafeAreaView>
     )
 }
+
 
 //A função abaixo (ListItem) serve pra listar os dados que serão renderizados na tela pelo renderItem do Flatlist.
 function ListItem({ data }) {
@@ -58,6 +51,10 @@ function ListItem({ data }) {
     return (
         <TouchableOpacity onPress={alertMessage} style={styles.listItem} >
             <Text style={styles.listText}>{data.Apartamento} - {data.Categoria}</Text>
+            <TouchableOpacity onPress={Note} style={styles.iconObservation}>
+                <Icon name="clipboard" size={30} color="white"
+                />
+            </TouchableOpacity>
         </TouchableOpacity>
     )
 }
@@ -90,6 +87,34 @@ const alertMessage = () => {
     )
 }
 
+const Note = () => {
+    const [isNoteVisible, setNoteVisibility] = useState(false);
+
+    return (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <TouchableOpacity
+                onPress={() => setNoteVisibility(!isNoteVisible)}
+            />
+            {isNoteVisible && (
+                <TextInput
+                    style={{
+                        height: 40,
+                        width: 200,
+                        borderColor: 'gray',
+                        borderWidth: 1,
+                        marginTop: 10,
+                    }}
+                    placeholder="Take a note..."
+                />
+            )}
+        </View>
+    );
+};
+
+
+
+
+
 //A função abaixo serve para mostrar a animação de carregamento ao scrollar a flalist até o final 
 //de acordo com as definições do ListFooterComponent da FlatList. 
 function FooterList({ load }) {
@@ -100,5 +125,3 @@ function FooterList({ load }) {
         </View>
     )
 }
-
-

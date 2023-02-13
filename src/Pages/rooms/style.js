@@ -31,11 +31,23 @@ const styles = StyleSheet.create({
         padding: 25,
         marginTop: 20,
         borderRadius: 10,
+        flexDirection: 'row',
+        alignItems: "center",
+
+
     },
 
     listText: {
         fontSize: 16,
         color: 'white',
+        fontWeight: 'bold',
+    },
+
+    iconObservation: {
+        position: 'absolute',
+        top: 20,
+        right: 20,
+
     },
 
     loading: {
