@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, SafeAreaView, } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import Icon from 'react-native-vector-icons/FontAwesome5'
 import styles from './style';
 import axios from 'axios';
-
-
+import IconAnotacao from './anotacoes';
 
 
 export default function Room({ route }) {
@@ -51,10 +49,9 @@ function ListItem({ data }) {
     return (
         <TouchableOpacity onPress={alertMessage} style={styles.listItem} >
             <Text style={styles.listText}>{data.Apartamento} - {data.Categoria}</Text>
-            <TouchableOpacity onPress={Note} style={styles.iconObservation}>
-                <Icon name="clipboard" size={30} color="white"
-                />
-            </TouchableOpacity>
+            <View style={styles.iconObservation}>
+                <IconAnotacao />
+            </View>
         </TouchableOpacity>
     )
 }
@@ -86,33 +83,6 @@ const alertMessage = () => {
         ],
     )
 }
-
-const Note = () => {
-    const [isNoteVisible, setNoteVisibility] = useState(false);
-
-    return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <TouchableOpacity
-                onPress={() => setNoteVisibility(!isNoteVisible)}
-            />
-            {isNoteVisible && (
-                <TextInput
-                    style={{
-                        height: 40,
-                        width: 200,
-                        borderColor: 'gray',
-                        borderWidth: 1,
-                        marginTop: 10,
-                    }}
-                    placeholder="Take a note..."
-                />
-            )}
-        </View>
-    );
-};
-
-
-
 
 
 //A função abaixo serve para mostrar a animação de carregamento ao scrollar a flalist até o final 
