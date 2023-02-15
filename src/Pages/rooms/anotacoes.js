@@ -1,15 +1,34 @@
 import React, { useState } from "react";
-import { View, TextInput, Text, Modal, Button, TouchableOpacity } from 'react-native';
+import { View, TextInput, Modal, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { StyleSheet } from "react-native";
 
 export default function IconAnotacao() {
 
     const [abrirAnotacao, setAbrirAnotacao] = useState(false)
+    const [texto, setTexto] = useState("")
+
+
+
+    //A próxima const serve para enviar a obsevação e depois zerar o input.
+    const EnviarObs = () => {
+        console.log(texto)
+        setTexto("")
+
+    }
+
+    //A próxima const serve para zerar o input e depois fechar a tela de observação.
+    const CancelarObs = () => {
+        setTexto("")
+        setAbrirAnotacao(false)
+
+    }
+
+
 
     return (
         <View>
-            <TouchableOpacity style={styles.buttonObs} onPress={() => setAbrirAnotacao(true)}>
+            <TouchableOpacity onPress={() => setAbrirAnotacao(true)}>
                 <Icon name="clipboard" size={30} color="white" />
             </TouchableOpacity>
             <Modal visible={abrirAnotacao}>
@@ -19,24 +38,28 @@ export default function IconAnotacao() {
                         numberOfLines={10}
                         style={styles.campoObs}
                         placeholder={'Digite aqui a sua observação!'}
-
-                    />
-                    <Button
-                        title="Enviar" onPress={() => setAbrirAnotacao(false)}
-                        marginHorizontal='10'
-                        color='#38A69D'
-                        borderRadius='10'
-                        style={styles.buttonEnviar}
+                        value={texto}
+                        onChangeText={setTexto}
 
 
                     />
+                    <View style={styles.viewBotoes}>
+                        <TouchableOpacity style={styles.button} onPress={EnviarObs}>
+                            <Text style={styles.textoBotoes}>Enviar</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.buttonCancelar} onPress={CancelarObs}>
+                            <Text style={styles.textoBotoes}>Cancelar</Text>
+                        </TouchableOpacity>
+                    </View>
+
                 </View>
             </Modal>
         </View>
 
     )
-
 }
+
 
 
 const styles = StyleSheet.create({
@@ -55,11 +78,39 @@ const styles = StyleSheet.create({
 
     },
 
-    buttonEnviar: {
-        width: 150,
+    viewBotoes: {
+        marginLeft: 10,
+        marginRight: 10,
+        flexDirection: "row",
+        justifyContent: "center",
+    },
+
+    button: {
+        height: 40,
+        width: 100,
+        borderRadius: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: '#38A69D',
+        fontSize: 18,
+        margin: 10,
+    },
+    buttonCancelar: {
+        height: 40,
+        width: 100,
+        borderRadius: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: '#dc3545',
+        fontSize: 18,
+        margin: 10,
+    },
+
+    textoBotoes: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
 
     },
 
 })
-
-

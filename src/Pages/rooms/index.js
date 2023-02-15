@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, SafeAreaView, } from 'react-native';
 import * as Animatable from 'react-native-animatable';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import styles from './style';
 import axios from 'axios';
 import IconAnotacao from './anotacoes';
+import { useNavigation } from '@react-navigation/native';
+
 
 
 export default function Room({ route }) {
@@ -11,9 +14,10 @@ export default function Room({ route }) {
 
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
+    const AnimatableIcon = Animatable.createAnimatableComponent(Icon);
+    const navigation = useNavigation();
 
-
-
+    //O useEffect a seguir tem a função de puxar as informações dos apartamentos de acordo com o usuário logado.
     useEffect(() => {
         axios.get(`http://192.168.50.53:44365/apartamento/getapartamentos?empresa=${userlogado.UIDEmpresa}`)
             .then((res) => {
@@ -26,11 +30,21 @@ export default function Room({ route }) {
         setLoading(false);
     }, []);
 
+
     return (
         <SafeAreaView style={styles.container}>
-            <Animatable.Text animation="fadeInLeft" delay={500} style={styles.apartamento}>Apartamentos Ocupados
-            </Animatable.Text>
-
+            <View style={styles.viewLogout}>
+                <Animatable.Text animation="fadeInLeft" delay={500} style={styles.apartamento}>Apartamentos Ocupados
+                </Animatable.Text>
+                <TouchableOpacity onPress={() => navigation.navigate('Signin')}>
+                    <AnimatableIcon
+                        animation="fadeInRight"
+                        delay={600}
+                        name="logout"
+                        size={40}
+                        color="#38A69D" />
+                </TouchableOpacity>
+            </View>
             <FlatList
                 style={styles.flatList}
                 contentContainerStyle={{ marginHorizontal: 20 }}

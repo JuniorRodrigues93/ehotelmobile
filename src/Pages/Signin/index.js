@@ -12,12 +12,16 @@ export default function Signin() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+
+    //A próxima const define a ação de Login, puxando as informações da Api.
     const handerLogin = () => {
         axios.get(`http://192.168.50.53:44365/usuario/getuser?email=${username}&senha=${password}`)
             .then((res) => {
                 console.log(res.data[0]);
                 if (res.data[0] != undefined) {
                     navigation.navigate('Room', { userLogado: res.data[0] })
+                    setUsername("")
+                    setPassword("")
                 } else {
                     Alert.alert('Login Inválido!');
                 }
@@ -38,8 +42,7 @@ export default function Signin() {
                     placeholder="Informe o usuário..."
                     value={username}
                     onChangeText={setUsername}
-                // onChange={setUsername(this.value)}                    
-                //onChange={(value) => setUsername(value)}
+
                 />
 
                 {/* Campo para informar a senha. */}
@@ -50,7 +53,7 @@ export default function Signin() {
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry
-                //onChange={(value) => setPassword(value)}
+
                 />
                 <TouchableOpacity onPress={() => handerLogin()} style={styles.button}>
                     <Text style={styles.textButton}>Acessar</Text>

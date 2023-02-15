@@ -6,13 +6,20 @@ const styles = StyleSheet.create({
 
     },
 
+    viewLogout: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingRight: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#38A69D',
+    },
+
     apartamento: {
         fontSize: 24,
         padding: 20,
         color: '#38A69D',
         fontWeight: 'bold',
-        borderBottomWidth: 1,
-        borderBottomColor: '#38A69D',
     },
 
     viewIcon: {
