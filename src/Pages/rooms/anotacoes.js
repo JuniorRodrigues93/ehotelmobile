@@ -1,27 +1,69 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, TextInput, Modal, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { StyleSheet } from "react-native";
+import WebSocket from "react-native-websocket"
+
+
 
 export default function IconAnotacao() {
 
     const [abrirAnotacao, setAbrirAnotacao] = useState(false)
-    const [texto, setTexto] = useState("")
-
+    //const [texto, setTexto] = useState("")
 
 
     //A próxima const serve para enviar a obsevação e depois zerar o input.
-    const EnviarObs = () => {
-        console.log(texto)
-        setTexto("")
+    // const EnviarObs = () => {
+    //     console.log(texto)
+    //     setTexto("")
 
-    }
+    // }
 
     //A próxima const serve para zerar o input e depois fechar a tela de observação.
     const CancelarObs = () => {
         setTexto("")
         setAbrirAnotacao(false)
 
+    }
+
+    const [webSocket, setWebSocket] = useState();
+    const [mensagens, setMensagens] = useState([]);
+    const [texto, setTexto] = useState('');
+
+    useEffect(() => {
+        const ws = new WebSocket('ws://192.168.50.33:3333/');
+
+        ws.onopen = () => {
+            console.log('Conectado ao servidor Web Socket');
+        };
+
+        ws.onmessage = event => {
+            const mensagem = event.data;
+            console.log(`Recebido: ${mensagem}`);
+            setMensagens([...mensagens, mensagem]);
+        };
+
+        ws.onerror = error => {
+            console.error(`Erro no Web Socket: ${error.message}`);
+        };
+
+        ws.onclose = event => {
+            console.log(`Conexão fechada: ${event.code} - ${event.reason}`);
+        };
+
+        setWebSocket(ws);
+
+        return () => {
+            ws.close();
+        };
+    }, []);
+
+    function handleEnviar() {
+        if (webSocket && webSocket.readyState === WebSocket.OPEN) {
+            console.log(`Enviando: ${texto}`);
+            webSocket.send(texto);
+            setTexto('');
+        }
     }
 
 
@@ -44,7 +86,7 @@ export default function IconAnotacao() {
 
                     />
                     <View style={styles.viewBotoes}>
-                        <TouchableOpacity style={styles.button} onPress={EnviarObs}>
+                        <TouchableOpacity style={styles.button} onPress={handleEnviar}>
                             <Text style={styles.textoBotoes}>Enviar</Text>
                         </TouchableOpacity>
 
