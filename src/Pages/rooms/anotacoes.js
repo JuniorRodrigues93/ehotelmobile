@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, TextInput, Modal, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { StyleSheet } from "react-native";
-import WebSocket from "react-native-websocket"
+import io from 'socket.io-client';
+
 
 
 
@@ -31,7 +32,7 @@ export default function IconAnotacao() {
     const [texto, setTexto] = useState('');
 
     useEffect(() => {
-        const ws = new WebSocket('ws://192.168.50.33:3333/');
+        const ws = new io('ws://localhost:3333');
 
         ws.onopen = () => {
             console.log('Conectado ao servidor Web Socket');
@@ -59,7 +60,7 @@ export default function IconAnotacao() {
     }, []);
 
     function handleEnviar() {
-        if (webSocket && webSocket.readyState === WebSocket.OPEN) {
+        if (webSocket && webSocket.readyState === io.OPEN) {
             console.log(`Enviando: ${texto}`);
             webSocket.send(texto);
             setTexto('');
