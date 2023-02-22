@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View, TextInput, Modal, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { StyleSheet } from "react-native";
-import io from 'socket.io-client';
+import { HubConnectionBuilder } from "@microsoft/signalr";
+
+
 
 
 
@@ -13,60 +15,47 @@ export default function IconAnotacao() {
     //const [texto, setTexto] = useState("")
 
 
-    //A próxima const serve para enviar a obsevação e depois zerar o input.
+    //Inicio da conexão SignalR
+    const [hubConnection, setHubConnection] = useState(null);
+    const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        const createHubConnection = async () => {
+            const hubConnect = new HubConnectionBuilder()
+                .withUrl("http://localhost:3333")
+                .withAutomaticReconnect()
+                .build();
+
+            setHubConnection(hubConnect);
+        }
+
+        createHubConnection();
+    }, []);
+
+    //A const a seguir é utilizada para fazer o envio da mensagem através do método SendMessage definido no lado do servidor
+    const sendMessage = async () => {
+        if (hubConnection && message) {
+            await hubConnection.invoke('SendMessage', message);
+            console.log(message)
+            setMessage('');
+        }
+    }
+
+
+    // A próxima const serve para enviar a obsevação e depois zerar o input.
     // const EnviarObs = () => {
     //     console.log(texto)
     //     setTexto("")
 
     // }
 
+
     //A próxima const serve para zerar o input e depois fechar a tela de observação.
     const CancelarObs = () => {
-        setTexto("")
+        setMessage("")
         setAbrirAnotacao(false)
 
     }
-
-    const [webSocket, setWebSocket] = useState();
-    const [mensagens, setMensagens] = useState([]);
-    const [texto, setTexto] = useState('');
-
-    useEffect(() => {
-        const ws = new io('ws://localhost:3333');
-
-        ws.onopen = () => {
-            console.log('Conectado ao servidor Web Socket');
-        };
-
-        ws.onmessage = event => {
-            const mensagem = event.data;
-            console.log(`Recebido: ${mensagem}`);
-            setMensagens([...mensagens, mensagem]);
-        };
-
-        ws.onerror = error => {
-            console.error(`Erro no Web Socket: ${error.message}`);
-        };
-
-        ws.onclose = event => {
-            console.log(`Conexão fechada: ${event.code} - ${event.reason}`);
-        };
-
-        setWebSocket(ws);
-
-        return () => {
-            ws.close();
-        };
-    }, []);
-
-    function handleEnviar() {
-        if (webSocket && webSocket.readyState === io.OPEN) {
-            console.log(`Enviando: ${texto}`);
-            webSocket.send(texto);
-            setTexto('');
-        }
-    }
-
 
 
     return (
@@ -81,13 +70,13 @@ export default function IconAnotacao() {
                         numberOfLines={10}
                         style={styles.campoObs}
                         placeholder={'Digite aqui a sua observação!'}
-                        value={texto}
-                        onChangeText={setTexto}
+                        value={message}
+                        onChangeText={setMessage}
 
 
                     />
                     <View style={styles.viewBotoes}>
-                        <TouchableOpacity style={styles.button} onPress={handleEnviar}>
+                        <TouchableOpacity style={styles.button} onPress={sendMessage}>
                             <Text style={styles.textoBotoes}>Enviar</Text>
                         </TouchableOpacity>
 
