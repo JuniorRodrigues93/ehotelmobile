@@ -1,53 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { View, TextInput, Modal, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { StyleSheet } from "react-native";
-import { HubConnectionBuilder } from "@microsoft/signalr";
-
-
-
+// import { HubConnectionBuilder } from "@microsoft/signalr";
+import signalr from 'react-native-signalr';
 
 
 
 export default function IconAnotacao() {
 
     const [abrirAnotacao, setAbrirAnotacao] = useState(false)
-    //const [texto, setTexto] = useState("")
-
-
-    //Inicio da conexão SignalR
-    const [hubConnection, setHubConnection] = useState(null);
     const [message, setMessage] = useState('');
+    const connection = signalr.hubConnection('http://192.168.50.53:44373');
+    const meuHubProxy = connection.createHubProxy('meuHub');
+    // const [hubConnection, setHubConnection] = useState(null);
 
-    useEffect(() => {
-        const createHubConnection = async () => {
-            const hubConnect = new HubConnectionBuilder()
-                .withUrl("http://localhost:3333")
-                .withAutomaticReconnect()
-                .build();
+    connection.start()
+        .done(() => {
+            console.log('Conectado ao SignalR');
+            meuHubProxy.invoke('SendMessage', 'Olá do React Native!');
+        })
+        .fail((error) => {
+            console.log('Erro ao conectar ao SignalR: ' + error);
+        });
 
-            setHubConnection(hubConnect);
-        }
+    meuHubProxy.on('SendMessage', (mensagem) => {
+        console.log('Nova mensagem recebida: ' + mensagem);
+    });
 
-        createHubConnection();
-    }, []);
+
 
     //A const a seguir é utilizada para fazer o envio da mensagem através do método SendMessage definido no lado do servidor
     const sendMessage = async () => {
-        if (hubConnection && message) {
-            await hubConnection.invoke('SendMessage', message);
+        if (connection && message) {
+            await meuHubProxy.invoke('SendMessage', message);
             console.log(message)
             setMessage('');
         }
     }
 
-
-    // A próxima const serve para enviar a obsevação e depois zerar o input.
-    // const EnviarObs = () => {
-    //     console.log(texto)
-    //     setTexto("")
-
-    // }
 
 
     //A próxima const serve para zerar o input e depois fechar a tela de observação.
@@ -94,6 +85,8 @@ export default function IconAnotacao() {
 
 
 
+//A estilização a seguir é referente apenas ao Return dentro do arquivo anotações, a estilização referente ao arquivo Index foi
+//feita dentro do arquivo Style.
 const styles = StyleSheet.create({
     campoObs: {
         marginTop: 20,
