@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { View, TextInput, Modal, Text, TouchableOpacity } from 'react-native';
+import { View, TextInput, Modal, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { StyleSheet } from "react-native";
-// import { HubConnectionBuilder } from "@microsoft/signalr";
 import signalr from 'react-native-signalr';
 
 
@@ -11,34 +10,21 @@ export default function IconAnotacao() {
 
     const [abrirAnotacao, setAbrirAnotacao] = useState(false)
     const [message, setMessage] = useState('');
-    const connection = signalr.hubConnection('http://192.168.50.53:44373');
-    const meuHubProxy = connection.createHubProxy('meuHub');
-    // const [hubConnection, setHubConnection] = useState(null);
-
-    connection.start()
-        .done(() => {
-            console.log('Conectado ao SignalR');
-            meuHubProxy.invoke('SendMessage', 'Olá do React Native!');
-        })
-        .fail((error) => {
-            console.log('Erro ao conectar ao SignalR: ' + error);
-        });
-
-    meuHubProxy.on('SendMessage', (mensagem) => {
-        console.log('Nova mensagem recebida: ' + mensagem);
-    });
-
+    const connection = signalr.hubConnection('http://192.168.50.53:44308');
+    const meuHubProxy = connection.createHubProxy('chatHub');
 
 
     //A const a seguir é utilizada para fazer o envio da mensagem através do método SendMessage definido no lado do servidor
-    const sendMessage = async () => {
-        if (connection && message) {
-            await meuHubProxy.invoke('SendMessage', message);
-            console.log(message)
-            setMessage('');
-        }
-    }
+    const sendMessage = () => {
+        connection.start().done(() => {
+            meuHubProxy.invoke('sendMessage', 'User', message);
+            setMessage("")
+            console.log('message');
 
+        }).fail((error) => {
+            console.log('Erro ao conectar ao SignalR: ' + error);
+        });
+    }
 
 
     //A próxima const serve para zerar o input e depois fechar a tela de observação.
@@ -50,7 +36,7 @@ export default function IconAnotacao() {
 
 
     return (
-        <View>
+        <SafeAreaView>
             <TouchableOpacity onPress={() => setAbrirAnotacao(true)}>
                 <Icon name="clipboard" size={30} color="white" />
             </TouchableOpacity>
@@ -63,8 +49,7 @@ export default function IconAnotacao() {
                         placeholder={'Digite aqui a sua observação!'}
                         value={message}
                         onChangeText={setMessage}
-
-
+                        textAlignVertical="top"
                     />
                     <View style={styles.viewBotoes}>
                         <TouchableOpacity style={styles.button} onPress={sendMessage}>
@@ -78,7 +63,7 @@ export default function IconAnotacao() {
 
                 </View>
             </Modal>
-        </View>
+        </SafeAreaView>
 
     )
 }
@@ -93,11 +78,11 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 10,
         marginBottom: 10,
+        height: 250,
         padding: 10,
         borderWidth: 2,
         borderColor: '#38A69D',
         borderRadius: 10,
-        textAlignVertical: "top",
         paddingTop: 10,
         fontSize: 18,
 
