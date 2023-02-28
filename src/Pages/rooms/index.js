@@ -17,6 +17,8 @@ export default function Room({ route }) {
     const AnimatableIcon = Animatable.createAnimatableComponent(Icon);
     const navigation = useNavigation();
 
+
+
     //O useEffect a seguir tem a função de puxar as informações dos apartamentos de acordo com o usuário logado.
     useEffect(() => {
         axios.get(`http://192.168.50.53:44365/apartamento/getapartamentos?empresa=${userlogado.UIDEmpresa}`)
@@ -29,6 +31,17 @@ export default function Room({ route }) {
         setLoading(true);
         setLoading(false);
     }, []);
+
+    // const sendMessage = (props) => {
+    //     connection.start().done(() => {
+    //         meuHubProxy.invoke('sendMessage', 'User', 'Liberar' + props.apartamento);
+    //         setMessage("")
+    //         console.log(message + props.apartamento);
+
+    //     })
+    // }
+
+
 
 
     return (
@@ -64,7 +77,7 @@ function ListItem({ data }) {
         <TouchableOpacity onPress={alertMessage} style={styles.listItem} >
             <Text style={styles.listText}>{data.Apartamento} - {data.Categoria}</Text>
             <View style={styles.iconObservation}>
-                <IconAnotacao />
+                <IconAnotacao apartamento={data.Apartamento} categoria={data.Categoria} />
             </View>
         </TouchableOpacity>
     )
@@ -79,7 +92,8 @@ const alertMessage = () => {
             onPress: () => Alert.alert("Confirma a liberação desse apartamento?", "Essa ação não poderá ser desfeita!",
                 [{
                     text: "Liberar",
-                    onPress: () => console.log("Liberar",),
+                    onPress: () => (sendMessage),
+                    //onPress: () => console.log("Liberar",),
                     style: 'default',
                 },
                 {
@@ -98,6 +112,16 @@ const alertMessage = () => {
     )
 }
 
+function sendMessage(props) {
+    connection.start().done(() => {
+        meuHubProxy.invoke('sendMessage', 'User', 'Liberar' + props.apartamento);
+        setMessage("")
+        console.log(message + props.apartamento);
+
+    })
+}
+const [message, setMessage] = useState('');
+
 
 //A função abaixo serve para mostrar a animação de carregamento ao scrollar a flalist até o final 
 //de acordo com as definições do ListFooterComponent da FlatList. 
@@ -109,3 +133,5 @@ function FooterList({ load }) {
         </View>
     )
 }
+
+

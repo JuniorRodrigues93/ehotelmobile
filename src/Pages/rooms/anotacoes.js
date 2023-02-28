@@ -6,7 +6,9 @@ import signalr from 'react-native-signalr';
 
 
 
-export default function IconAnotacao() {
+
+
+export default function IconAnotacao(props) {
 
     const [abrirAnotacao, setAbrirAnotacao] = useState(false)
     const [message, setMessage] = useState('');
@@ -14,12 +16,15 @@ export default function IconAnotacao() {
     const meuHubProxy = connection.createHubProxy('chatHub');
 
 
+
+
+
     //A const a seguir é utilizada para fazer o envio da mensagem através do método SendMessage definido no lado do servidor
     const sendMessage = () => {
         connection.start().done(() => {
-            meuHubProxy.invoke('sendMessage', 'User', message);
+            meuHubProxy.invoke('sendMessage', 'User', message + props.apartamento);
             setMessage("")
-            console.log('message');
+            console.log(message + props.apartamento);
 
         }).fail((error) => {
             console.log('Erro ao conectar ao SignalR: ' + error);
