@@ -7,6 +7,7 @@ import axios from 'axios';
 
 
 
+
 export default function Signin() {
     const navigation = useNavigation();
     const [username, setUsername] = useState('');
@@ -24,6 +25,7 @@ export default function Signin() {
                     setPassword("")
                 } else {
                     Alert.alert('Login Inválido!');
+                    console.log('Login Inválido!');
                 }
             });
     }

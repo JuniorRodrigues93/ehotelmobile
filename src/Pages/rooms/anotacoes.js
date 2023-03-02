@@ -16,9 +16,6 @@ export default function IconAnotacao(props) {
     const meuHubProxy = connection.createHubProxy('chatHub');
 
 
-
-
-
     //A const a seguir é utilizada para fazer o envio da mensagem através do método SendMessage definido no lado do servidor
     const sendMessage = () => {
         connection.start().done(() => {
@@ -72,6 +69,9 @@ export default function IconAnotacao(props) {
 
     )
 }
+
+
+
 
 
 
