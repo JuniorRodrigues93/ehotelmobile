@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import signalr from 'react-native-signalr';
 
 
-export default function Room({ route, props }) {
+export default function Room({ route }) {
     const userlogado = route.params.userLogado;
 
     const [data, setData] = useState([]);
@@ -36,10 +36,10 @@ export default function Room({ route, props }) {
 
     //A função a seguir é utilizada para fazer o envio da mensagem através do método SendMessage definido no lado do servidor
     function sendMessage(props) {
-        const connection = signalr.hubConnection('http://192.168.50.53:44308');
-        const meuHubProxy = connection.createHubProxy('chatHub');
+        const connection = signalr.hubConnection('http://192.168.50.53:44367');
+        const meuHubProxy = connection.createHubProxy('notificationHub');
         connection.start().done(() => {
-            meuHubProxy.invoke('sendMessage', 'User', 'Liberar' + props.apartamento);
+            meuHubProxy.invoke('sendMessage', userlogado.UIDEmpresa, 'Liberar ' + props.apartamento);
             setMessage("")
             console.log('Liberar' + props.apartamento);
 
@@ -57,7 +57,7 @@ export default function Room({ route, props }) {
             <TouchableOpacity onPress={() => alertMessage(data.Apartamento)} style={styles.listItem} >
                 <Text style={styles.listText}>{data.Apartamento} - {data.Categoria}</Text>
                 <View style={styles.iconObservation}>
-                    <IconAnotacao apartamento={data.Apartamento} categoria={data.Categoria} />
+                    <IconAnotacao apartamento={data.Apartamento} categoria={data.Categoria} uidempresa={userlogado.UIDEmpresa} />
                 </View>
             </TouchableOpacity>
         )
@@ -67,14 +67,14 @@ export default function Room({ route, props }) {
 
     //A função abaixo (alertMessage) serve para criar o alerta que será exibido ao clicar no apartamento. 
     //Essa função é utilizada na função anterior (ListItem).
-    const alertMessage = () => {
+    const alertMessage = (props) => {
         Alert.alert("Conferência do apartamento.", "Por favor, confira se está tudo ok antes de fazer a Liberação!",
             [{
                 text: "Liberar",
                 onPress: () => Alert.alert("Confirma a liberação desse apartamento?", "Essa ação não poderá ser desfeita!",
                     [{
                         text: "Liberar",
-                        onPress: () => sendMessage(data),
+                        onPress: () => sendMessage(),
                         style: 'default',
                     },
                     {

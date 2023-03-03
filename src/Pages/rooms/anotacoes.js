@@ -12,16 +12,16 @@ export default function IconAnotacao(props) {
 
     const [abrirAnotacao, setAbrirAnotacao] = useState(false)
     const [message, setMessage] = useState('');
-    const connection = signalr.hubConnection('http://192.168.50.53:44308');
-    const meuHubProxy = connection.createHubProxy('chatHub');
+    const connection = signalr.hubConnection('http://192.168.50.53:44367');
+    const meuHubProxy = connection.createHubProxy('notificationHub');
 
 
     //A const a seguir é utilizada para fazer o envio da mensagem através do método SendMessage definido no lado do servidor
     const sendMessage = () => {
         connection.start().done(() => {
-            meuHubProxy.invoke('sendMessage', 'User', message + props.apartamento);
+            meuHubProxy.invoke('sendMessage', props.uidempresa, message + ' ' + props.apartamento);
             setMessage("")
-            console.log(message + props.apartamento);
+            console.log(message + ' ' + props.apartamento);
 
         }).fail((error) => {
             console.log('Erro ao conectar ao SignalR: ' + error);
