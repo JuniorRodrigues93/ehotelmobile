@@ -4,10 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { StyleSheet } from "react-native";
 import signalr from 'react-native-signalr';
 
-
-
-
-
+{/*IconAnotacao se refere ao ícone de caderneta que fica ao lado dos apartamentos */ }
 export default function IconAnotacao(props) {
 
     const [abrirAnotacao, setAbrirAnotacao] = useState(false)
@@ -19,9 +16,10 @@ export default function IconAnotacao(props) {
     //A const a seguir é utilizada para fazer o envio da mensagem através do método SendMessage definido no lado do servidor
     const sendMessage = () => {
         connection.start().done(() => {
-            meuHubProxy.invoke('sendMessage', props.uidempresa, message + ' ' + props.apartamento);
-            setMessage("")
-            console.log(message + ' ' + props.apartamento);
+            meuHubProxy.invoke('sendMessage', props.uidempresa, message + ' - ' + props.apartamento);
+            setMessage("") //Zera o testInput após enviar a mensagem
+            setAbrirAnotacao(false) //Fecha o textInput de anotações após enviar a mensagem e retorna pra lista de apartamentos.
+            //console.log(message + ' ' + props.apartamento);
 
         }).fail((error) => {
             console.log('Erro ao conectar ao SignalR: ' + error);
@@ -38,12 +36,13 @@ export default function IconAnotacao(props) {
 
 
     return (
-        <SafeAreaView>
+        <SafeAreaView >
             <TouchableOpacity onPress={() => setAbrirAnotacao(true)}>
                 <Icon name="clipboard" size={30} color="white" />
             </TouchableOpacity>
             <Modal visible={abrirAnotacao}>
-                <View>
+                {/* O próximo SafeAreaView é referente ao campo de observações. */}
+                <SafeAreaView>
                     <TextInput
                         multiline={true}
                         numberOfLines={10}
@@ -54,25 +53,22 @@ export default function IconAnotacao(props) {
                         textAlignVertical="top"
                     />
                     <View style={styles.viewBotoes}>
+                        {/* Botão para enviar a mensagem do textInput para o servidor. */}
                         <TouchableOpacity style={styles.button} onPress={sendMessage}>
                             <Text style={styles.textoBotoes}>Enviar</Text>
                         </TouchableOpacity>
 
+                        {/* Botão para cancelar o envio da mensagem. */}
                         <TouchableOpacity style={styles.buttonCancelar} onPress={CancelarObs}>
                             <Text style={styles.textoBotoes}>Cancelar</Text>
                         </TouchableOpacity>
                     </View>
-
-                </View>
+                </SafeAreaView>
             </Modal>
         </SafeAreaView>
 
     )
 }
-
-
-
-
 
 
 //A estilização a seguir é referente apenas ao Return dentro do arquivo anotações, a estilização referente ao arquivo Index foi

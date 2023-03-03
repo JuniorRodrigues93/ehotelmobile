@@ -7,7 +7,7 @@ import axios from 'axios';
 
 
 
-
+{/*Tela de Login do app*/ }
 export default function Signin() {
     const navigation = useNavigation();
     const [username, setUsername] = useState('');
@@ -18,20 +18,21 @@ export default function Signin() {
     const handerLogin = () => {
         axios.get(`http://192.168.50.53:44365/usuario/getuser?email=${username}&senha=${password}`)
             .then((res) => {
-                console.log(res.data[0]);
+                //console.log(res.data[0]);
                 if (res.data[0] != undefined) {
                     navigation.navigate('Room', { userLogado: res.data[0] })
                     setUsername("")
                     setPassword("")
                 } else {
                     Alert.alert('Login Inválido!');
-                    console.log('Login Inválido!');
+                    //console.log('Login Inválido!');
                 }
             });
     }
 
     return (
         <Pressable onPress={Keyboard.dismiss} style={styles.container}>
+            {/*Animação do texto Bem-vindo*/}
             <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
                 <Text style={styles.message}>Bem-vindo (a)</Text>
             </Animatable.View>

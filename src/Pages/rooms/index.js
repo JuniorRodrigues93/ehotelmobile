@@ -8,7 +8,7 @@ import IconAnotacao from './anotacoes';
 import { useNavigation } from '@react-navigation/native';
 import signalr from 'react-native-signalr';
 
-
+{/*Tela da listagem de apartamentos*/ }
 export default function Room({ route }) {
     const userlogado = route.params.userLogado;
 
@@ -21,11 +21,12 @@ export default function Room({ route }) {
 
 
 
+
     //O useEffect a seguir tem a função de puxar as informações dos apartamentos de acordo com o usuário logado.
     useEffect(() => {
         axios.get(`http://192.168.50.53:44365/apartamento/getapartamentos?empresa=${userlogado.UIDEmpresa}`)
             .then((res) => {
-                console.log(res.data);
+                //console.log(res.data);
                 setData(res.data);
             })
 
@@ -35,13 +36,13 @@ export default function Room({ route }) {
     }, []);
 
     //A função a seguir é utilizada para fazer o envio da mensagem através do método SendMessage definido no lado do servidor
-    function sendMessage(props) {
+    function sendMessage(apartamento) {
         const connection = signalr.hubConnection('http://192.168.50.53:44367');
         const meuHubProxy = connection.createHubProxy('notificationHub');
         connection.start().done(() => {
-            meuHubProxy.invoke('sendMessage', userlogado.UIDEmpresa, 'Liberar ' + props.apartamento);
+            meuHubProxy.invoke('sendMessage', userlogado.UIDEmpresa, 'Liberar ' + apartamento);
             setMessage("")
-            console.log('Liberar' + props.apartamento);
+            //console.log('Liberar' + apartamento);
 
         }).fail((error) => {
             console.log('Erro ao conectar ao SignalR: ' + error);
@@ -52,7 +53,34 @@ export default function Room({ route }) {
 
     //A função abaixo (ListItem) serve pra listar os dados que serão renderizados na tela pelo renderItem do Flatlist.
     function ListItem({ data }) {
-        console.log(data)
+        //A função abaixo (alertMessage) serve para criar o alerta que será exibido ao clicar no apartamento. 
+        //Essa função é utilizada na função anterior (ListItem).
+        const alertMessage = () => {
+            Alert.alert("Conferência do apartamento.", "Por favor, confira se está tudo ok antes de fazer a Liberação!",
+                [{
+                    text: "Liberar",
+                    onPress: () => Alert.alert("Confirma a liberação desse apartamento?", "Essa ação não poderá ser desfeita!",
+                        [{
+                            text: "Liberar",
+                            onPress: () => sendMessage(data.Apartamento),
+                            style: 'default',
+                        },
+                        {
+                            text: "Cancelar",
+                            onDismiss: () => (""),
+                            style: 'destructive',
+                        },
+                        ]),
+                },
+                {
+                    text: "Cancelar",
+                    onDismiss: () => (""),
+                    style: 'cancel',
+                },
+                ],
+            )
+        }
+        //console.log(data)
         return (
             <TouchableOpacity onPress={() => alertMessage(data.Apartamento)} style={styles.listItem} >
                 <Text style={styles.listText}>{data.Apartamento} - {data.Categoria}</Text>
@@ -64,42 +92,12 @@ export default function Room({ route }) {
     }
 
 
-
-    //A função abaixo (alertMessage) serve para criar o alerta que será exibido ao clicar no apartamento. 
-    //Essa função é utilizada na função anterior (ListItem).
-    const alertMessage = (props) => {
-        Alert.alert("Conferência do apartamento.", "Por favor, confira se está tudo ok antes de fazer a Liberação!",
-            [{
-                text: "Liberar",
-                onPress: () => Alert.alert("Confirma a liberação desse apartamento?", "Essa ação não poderá ser desfeita!",
-                    [{
-                        text: "Liberar",
-                        onPress: () => sendMessage(),
-                        style: 'default',
-                    },
-                    {
-                        text: "Cancelar",
-                        onDismiss: () => (""),
-                        style: 'destructive',
-                    },
-                    ]),
-            },
-            {
-                text: "Cancelar",
-                onDismiss: () => (""),
-                style: 'cancel',
-            },
-            ],
-        )
-    }
-
-
-
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.viewLogout}>
-                <Animatable.Text animation="fadeInLeft" delay={500} style={styles.apartamento}>Apartamentos Ocupados
-                </Animatable.Text>
+                {/*Animação do título da página*/}
+                <Animatable.Text animation="fadeInLeft" delay={500} style={styles.apartamento}>Apartamentos Ocupados</Animatable.Text>
+                {/*Botão para fazer Logout do app*/}
                 <TouchableOpacity onPress={() => navigation.navigate('Signin')}>
                     <AnimatableIcon
                         animation="fadeInRight"
