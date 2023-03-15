@@ -4,13 +4,8 @@
     "slug": "ehotelmobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/Logo.png",
+    "icon": "./src/assets/LogoeHotel.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./src/assets/Logo.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -23,7 +18,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./src/assets/eHotelMiniatura.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.focosistemas.ehotelmobile"

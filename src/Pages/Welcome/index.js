@@ -16,8 +16,11 @@ export default function Welcome() {
                 {/*Animação da imagem da tela inicial do app*/}
                 <Animatable.Image
                     animation="flipInY"
-                    source={require('../../assets/Logo.png')}
-                    style={{ width: '40%' }}
+                    delay={500}
+                    source={require('../../assets/LogoeHotel.png')}
+                    style={{
+                        width: '49%', height: '35%', borderRadius: 100, backgroundColor: '#f2f2f2'
+                    }}
                     resizeMode="contain"
                 />
             </View>

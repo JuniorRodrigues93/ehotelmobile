@@ -12,13 +12,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingRight: 10,
         borderBottomWidth: 1,
-        borderBottomColor: '#38A69D',
+        borderBottomColor: '#ef8a32',
     },
 
     apartamento: {
         fontSize: 24,
         padding: 20,
-        color: '#38A69D',
+        color: '#ef8a32',
         fontWeight: 'bold',
     },
 
@@ -35,7 +35,10 @@ const styles = StyleSheet.create({
 
     listItem: {
         backgroundColor: '#dc3545',
-        padding: 25,
+        paddingTop: 25,
+        paddingBottom: 25,
+        paddingLeft: 25,
+        paddingRight: 25,
         marginTop: 20,
         borderRadius: 10,
         flexDirection: 'row',
@@ -48,12 +51,16 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: 'white',
         fontWeight: 'bold',
+
     },
 
     iconObservation: {
         position: 'absolute',
-        top: 20,
+        top: 12,
         right: 20,
+        backgroundColor: '#f2f2f2',
+        padding: 10,
+        borderRadius: 10,
 
     },
 

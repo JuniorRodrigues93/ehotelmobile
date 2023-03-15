@@ -3,17 +3,17 @@
     "version": ">= 3.7.2"
   },
   "build": {
-    "preview": {
+    "eHotelMobile": {
       "android": {
-        "buildType": "app-bundle"
+        "buildType": "apk"
       }
     },
-    "preview2": {
+    "eHotelMobile2": {
       "android": {
-        "gradleCommand": ":app:bundleRelease"
+        "gradleCommand": ":app:assembleRelease"
       }
     },
-    "preview3": {
+    "eHotelMobile3": {
       "developmentClient": true
     },
     "production": {}

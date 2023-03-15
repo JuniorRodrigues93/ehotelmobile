@@ -17,6 +17,7 @@ export default function Room({ route }) {
     const [message, setMessage] = useState('');
     const AnimatableIcon = Animatable.createAnimatableComponent(Icon);
     const navigation = useNavigation();
+    const [refreshing, setRefreshing] = useState(false);
 
 
 
@@ -47,6 +48,19 @@ export default function Room({ route }) {
         }).fail((error) => {
             console.log('Erro ao conectar ao SignalR: ' + error);
         });
+    }
+
+    function Recarga() {
+        axios.get(`http://192.168.50.53:44365/apartamento/getapartamentos?empresa=${userlogado.UIDEmpresa}`)
+            .then((res) => {
+                //console.log(res.data);
+                setData(res.data);
+            })
+
+        if (loading) return;
+        setLoading(true);
+        setLoading(false);
+
     }
 
 
@@ -104,7 +118,7 @@ export default function Room({ route }) {
                         delay={600}
                         name="logout"
                         size={40}
-                        color="#38A69D" />
+                        color="#ef8a32" />
                 </TouchableOpacity>
             </View>
             <FlatList
@@ -112,6 +126,13 @@ export default function Room({ route }) {
                 contentContainerStyle={{ marginHorizontal: 20 }}
                 data={data}
                 renderItem={({ item }) => <ListItem data={item} />}
+                refreshing={refreshing}
+                onRefresh={() => {
+                    setRefreshing(true)
+                    console.log("Refreshing")
+                    Recarga()
+                    setRefreshing(false)
+                }}
                 ListFooterComponent={<FooterList load={loading} />} //Renderizado apenas no final da lista, vai atuar quando estiver em Loading.
             />
         </SafeAreaView>
@@ -129,5 +150,7 @@ function FooterList({ load }) {
         </View>
     )
 }
+
+
 
 

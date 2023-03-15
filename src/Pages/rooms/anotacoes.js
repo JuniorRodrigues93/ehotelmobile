@@ -38,7 +38,7 @@ export default function IconAnotacao(props) {
     return (
         <SafeAreaView >
             <TouchableOpacity onPress={() => setAbrirAnotacao(true)}>
-                <Icon name="clipboard" size={30} color="white" />
+                <Icon name="pencil-alt" size={25} color="#dc3545" />
             </TouchableOpacity>
             <Modal visible={abrirAnotacao}>
                 {/* O próximo SafeAreaView é referente ao campo de observações. */}
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         height: 250,
         padding: 10,
         borderWidth: 2,
-        borderColor: '#38A69D',
+        borderColor: '#ef8a32',
         borderRadius: 10,
         paddingTop: 10,
         fontSize: 18,

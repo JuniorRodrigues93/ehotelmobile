@@ -21,7 +21,7 @@ export default function Signin() {
                 //console.log(res.data[0]);
                 if (res.data[0] != undefined) {
                     navigation.navigate('Room', { userLogado: res.data[0] })
-                    setUsername("")
+                    //setUsername("")
                     setPassword("")
                 } else {
                     Alert.alert('Login Inválido!');
